@@ -56,16 +56,54 @@ void SYSTEM_Initialize()
     IOC = 0x0;            /* Interrupt on change disabled */ 
     DISABLE_PWM_Service();
 }
+void gen_wake2(void)
+{
+            GPIObits.GP5 = 0x1;
+            __delay_ms(100);
+            GPIObits.GP5 = 0x0;    
+}
 void main(void) {
     SYSTEM_Initialize();
     
+    unsigned char prev_band0 = 1;
+    unsigned char band0 = 1;
+    unsigned char prev_band1 = 1;
+    unsigned char band1 = 1;
+    unsigned char prev_band2 = 1;
+    unsigned char band2 = 1;
+    unsigned char prev_band3 = 1;
+    unsigned char band3 = 1;
+    
     do
     {
-        // ToDo
         /*
          * detekcja zmiany kodu na BAND DATA i wysłanie impulsu na wy WAKE2
-         * impuls WAKE2 min 100ms
+         * impuls WAKE2 100ms
          */
+        band0 = GPIObits.GP4;
+        if (band0 != prev_band0)
+        {
+            gen_wake2();
+            prev_band0 = band0;
+        }
+        band1 = GPIObits.GP2;
+        if (band1 != prev_band1)
+        {
+            gen_wake2();
+            prev_band1 = band1;
+        }
+        band2 = GPIObits.GP0;
+        if (band2 != prev_band2)
+        {
+            gen_wake2();
+            prev_band2 = band2;
+        }
+        band3 = GPIObits.GP1;
+        if (band3 != prev_band3)
+        {
+            gen_wake2();
+            prev_band3 = band3;
+        }
         __delay_ms(25);
     }
     while(1);
