@@ -1,8 +1,8 @@
 /*
  * File:   main.c
- * Author: George.Nikolaidis
+ * Author: witek
  *
- * Created on Mar 09, 2022, 18:00 PM
+ * Created on lipiec 2025
  */
 
 // PIC12F615 Configuration Bit Settings
@@ -42,7 +42,7 @@ void SYSTEM_Initialize()
     TRISA = 0b00011111;     // GP0, GP1, GP2, GP4 - INPUT (BAND DATA); GP5 sygnał WAKE2 
     CMCON0 = 0x07;      //comparators disabled
     //CMCON0bits_t.CMON = 0;    
-    GPIObits.GP5 = 0x0;     // stan aktywny wysoki dla WAKE2
+    GPIObits.GP5 = 0x1;     // stan aktywny wysoki dla WAKE2?
 
     OPTION_REG   = 0b00000000;  
                             /* 10000000,
@@ -56,30 +56,32 @@ void SYSTEM_Initialize()
     IOC = 0x0;            /* Interrupt on change disabled */ 
     DISABLE_PWM_Service();
 }
-void gen_wake2(void)
-{
-            GPIObits.GP5 = 0x1;
-            __delay_ms(100);
-            GPIObits.GP5 = 0x0;    
-}
+//void gen_wake2(void)
+//{
+//            GPIObits.GP5 = 0x1;
+//            __delay_ms(100);
+//            GPIObits.GP5 = 0x0;    
+//}
 void main(void) {
     SYSTEM_Initialize();
     
-    unsigned char prev_band0 = 1;
-    unsigned char band0 = 1;
-    unsigned char prev_band1 = 1;
-    unsigned char band1 = 1;
-    unsigned char prev_band2 = 1;
-    unsigned char band2 = 1;
-    unsigned char prev_band3 = 1;
-    unsigned char band3 = 1;
+//    unsigned char prev_band0 = 1;
+//    unsigned char band0 = 1;
+//    unsigned char prev_band1 = 1;
+//    unsigned char band1 = 1;
+//    unsigned char prev_band2 = 1;
+//    unsigned char band2 = 1;
+//    unsigned char prev_band3 = 1;
+//    unsigned char band3 = 1;
     
     do
     {
         /*
          * detekcja zmiany kodu na BAND DATA i wysłanie impulsu na wy WAKE2
          * impuls WAKE2 100ms
+         * uwaga: brak obsługi WAKE2; nie wiadomo jaki ma być sygnał; nie jest konieczny; wystarczy w ustawieniach KAT500 nie włączać usypiania procesora
          */
+        /*
         band0 = GPIObits.GP4;
         if (band0 != prev_band0)
         {
@@ -104,6 +106,7 @@ void main(void) {
             gen_wake2();
             prev_band3 = band3;
         }
+        */
         __delay_ms(25);
     }
     while(1);
